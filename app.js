@@ -3,6 +3,7 @@ const app=express();
 const mongoose=require('mongoose');
 const path=require('path');
 const Menu = require('./models/menu');
+const ejsMate=require('ejs-mate');
 
 
 
@@ -18,7 +19,10 @@ async function main(){
 
 app.set("view engine",'ejs');
 app.set("views",path.join(__dirname,"views"));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname,"public")));
+ 
+app.engine('ejs',ejsMate);
+ 
 
 app.get("/hero",(req,res)=>{
      res.render("hero.ejs");
