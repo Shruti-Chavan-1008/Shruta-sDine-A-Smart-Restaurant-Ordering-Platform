@@ -2,14 +2,14 @@ const SampleMenu=[
   // 🟢 VEG
   {
     "category": "veg",
-    "image": "https://www.sharmispassions.com/pulao-recipe-veg-pulao-recipe/",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbIL87wLOYK8woKwqCSlxGuNmu0glYYpSVRg&s",
     "title": "Veg Pulao",
     "description": "spiced rice mix",
     "price": 120
   },
   {
     "category": "veg",
-    "image": "https://source.unsplash.com/400x300/?paneer-butter-masalahttps://celloindia.co.in/cdn/shop/articles/09e4acfe3778136b196f0202b45f49d5_60e19218-7883-44c2-987f-76a01e6f3606_394x.jpg?v=1739959151",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ0WaJJjIKPdt_np1witzZWm3RtOLNqDD1Hw&s",
     "title": "Paneer Butter Masala",
     "description": "creamy paneer curry",
     "price": 180

@@ -1,0 +1,27 @@
+.hero{
+    background-image: url("https://t4.ftcdn.net/jpg/02/92/20/37/360_F_292203735_CSsyqyS6A4Z9Czd4Msf7qZEhoxjpzZl1.jpg");
+    background-size: contain;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-repeat: no-repeat;
+    align-items: center;
+    background-size: cover;
+     
+}
+.overlay{
+    color:whitesmoke;
+    text-align: center;
+}
+.overlay h2{
+    color: yellow;
+}
+.btn{
+    padding: 2;
+    align-items: center;
+}
+
+.cat{
+    background-color: gray;
+}

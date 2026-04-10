@@ -14,7 +14,7 @@ const MenuSchema=new Schema({
         required:true,
     },
     description:String,
-    Price:Number,
+    price:Number,
 });
 
 const Menu=mongoose.model("Menu",MenuSchema);

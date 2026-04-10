@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <h1>Create a New Menu</h1>
+    <form method="POST" action="/Menu">
+        <label for="formFile" class="form-label">Select the category</label>
+        <select class="form-select"  name="Menu[category]"aria-label="Default select example">
+  <option selected>Open this select menu</option>
+  <option value="1">veg</option>
+  <option value="2">non-veg</option>
+  <option value="3">drinks</option>
+  <option value="3">desserts</option>
+</select>
+        <div class="mb-3">
+  <label for="formFile" class="form-label">Image of food</label>
+  <input class="form-control" name="Menu[image]" type="file" id="formFile">
+</div>
+
+        <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">title</label>
+  <input type="title"  name="Menu[title]"class="form-control" id="exampleFormControlInput1" placeholder="Write the title of food">
+</div>
+<div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+  <textarea class="form-control" name="Menu[description]" id="exampleFormControlTextarea1" rows="3"></textarea>
+</div>
+<div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Price</label>
+  <input type="number" class="form-control" name="Menu[price]" id="exampleFormControlInput1" placeholder="Price">
+</div>
+
+      <button type="submit" class="btn btn-light p-2 mt-3"><b>Add food</b></button>
+    </form>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
