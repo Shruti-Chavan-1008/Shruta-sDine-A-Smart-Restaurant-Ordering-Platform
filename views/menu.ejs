@@ -1,36 +1,21 @@
  <% layout('layouts/boilerplate')-%>
+  <body> 
+     <h1 style="margin-left: 450px;">  <img style= "width: 200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgu5GeScWwcwtFlhaom9xVNd8Yu414tCfZFg&s"> <i>Menu Selection</i></h1>
+      <div class="container"> 
+        
+   <% for(let menu of allMenus) { %>
+   <div class="card" style="border: 1px solid black;">
      
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Menu</title>
-  <link rel="stylesheet" href="/styles/style.css">
-</head>
-<body>
-
-<h1>Our Menu</h1>
-
-<div class="row">
-  <% if(allMenus.length === 0) { %>
-    <p>No items found</p>
-  <% } else { %>
-    <% for(let menu of allMenus) { %>
-      <div class="card">
-        <img src="<%= menu.image %>" alt="<%= menu.title %>">
-        <h3><%= menu.title %></h3>
-        <h2><%= menu.description %></h2>
-        <p>₹<%= menu.price %></p>
-      </div>
-    <% } %>
-  <% } %>
-</div>
-<form method="GET" action="/Menu/new"> 
-    <button type="submit" class="btn btn-light p-2 mt-3"><b> New Order </b></button>
-</form>
-
- 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-</body>
- 
+  
+     <img src="<%= menu.image %>" alt="<%= menu.title %>" style="height: 200px; width: 200px; border-radius: 50%;">
+       <div class="card-body"> 
+         <h4><i> <%= menu.title %></i></h4>
+        <h5> <i> <%= menu.description %></i></h5>
+        <p><b>  Price : ₹<%= menu.price %></b> </p>
+        <a href="/add-to-card/<%=menu._id%>" class="btn btn-primary">ADD CARD</a>
+       </div>
+      
+     </div>
+     <% }%>
+ </div>
+ </body>
