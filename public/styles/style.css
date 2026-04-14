@@ -1,5 +1,5 @@
 .hero{
-    background-image: url("https://t4.ftcdn.net/jpg/02/92/20/37/360_F_292203735_CSsyqyS6A4Z9Czd4Msf7qZEhoxjpzZl1.jpg");
+    background-image: url("https://plus.unsplash.com/premium_photo-1661962305366-0c62646fd249?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdGF1cmFudCUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D");
     background-size: contain;
     height: 100vh;
     width: 100%;
@@ -24,4 +24,54 @@
 
 .cat{
     background-color: gray;
+    height: 10px;
+    width: 10px;
+    
 }
+.navbar{
+   
+    background-color:whitesmoke;
+     color: white;
+}
+
+.nav-link{
+    color: white;
+}
+
+.img{
+    height:200px;
+    width: 200px;
+    display: flex;
+}
+.img-c{
+    height: 200px ; 
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+    padding: 2px;
+    border-radius: 50%;
+}
+.h1{
+    padding: 2px;
+     color: aliceblue;
+     align-items: center;
+}
+.container{
+   display: flex;
+   flex-wrap: wrap;
+  gap: 20px;
+}
+.card{
+    border: 2px soild black;
+    height: 300px;
+    width: 300px;
+    border-radius: 2px;
+    padding: 4px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+     align-items: center;
+    justify-content: center; 
+}
+ 
