@@ -1,0 +1,96 @@
+<% layout("layouts/boilerplate") %>
+
+<% layout("layouts/boilerplate") %>
+
+<div class="success-page">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+
+            <i class="fa-solid fa-check"></i>
+
+        </div>
+
+        <p class="success-label">
+            ORDER CONFIRMED
+        </p>
+
+        <h1>
+            Your order has been placed!
+        </h1>
+
+        <p class="success-message">
+
+            Thank you for your order. Your food is being prepared and will be
+            served at your table shortly.
+
+        </p>
+
+        <% if (typeof tableNumber !== "undefined") { %>
+
+            <div class="order-summary-box">
+
+                <div class="summary-row">
+
+                    <span>Table Number</span>
+
+                    <strong>
+                        <%= tableNumber %>
+                    </strong>
+
+                </div>
+
+                <% if (typeof totalAmount !== "undefined") { %>
+
+                    <div class="summary-row">
+
+                        <span>Total Paid</span>
+
+                        <strong>
+                            ₹<%= totalAmount %>
+                        </strong>
+
+                    </div>
+
+                <% } %>
+
+                <% if (typeof paymentMethod !== "undefined") { %>
+
+                    <div class="summary-row">
+
+                        <span>Payment Method</span>
+
+                        <strong>
+                            <%= paymentMethod %>
+                        </strong>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        <% } %>
+
+        <div class="success-buttons">
+
+            <a href="/" class="home-button">
+
+                <i class="fa-solid fa-house"></i>
+
+                Back to Home
+
+            </a>
+
+            <a href="/menu" class="menu-button">
+
+                Order More
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

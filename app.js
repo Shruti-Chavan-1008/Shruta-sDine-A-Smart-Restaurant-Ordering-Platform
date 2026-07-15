@@ -1,78 +1,168 @@
-const express=require('express');
-const app=express();
-const mongoose=require('mongoose');
-const path=require('path');
-const Menu = require('./models/menu');
-const ejsMate=require('ejs-mate');
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+const path = require("path");
+const Menu = require("./models/menu");
+const ejsMate = require("ejs-mate");
+const methodOverride = require("method-override");
 
-let card=[];
+const MONGO_URL = "mongodb://127.0.0.1:27017/hotel";
 
-const MONGO_URL="mongodb://127.0.0.1:27017/hotel"
+// Temporary cart array
+let card = [];
 
+main()
+    .then(() => {
+        console.log("Database is connected");
+    })
+    .catch((error) => {
+        console.log("Database connection error:", error);
+    });
 
-main().then(()=>{
-  console.log("datebase is connected");
-});
-async function main(){
-    await mongoose.connect(MONGO_URL)
+async function main() {
+    await mongoose.connect(MONGO_URL);
 }
 
-app.set("view engine",'ejs');
-app.set("views",path.join(__dirname,"views"));
-app.use(express.static(path.join(__dirname,"public")));
- app.use(express.urlencoded({extended:true}));
-app.engine('ejs',ejsMate);
- 
+// App configuration
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
-app.get("/hero",(req,res)=>{
-     res.render("hero.ejs");
+app.engine("ejs", ejsMate);
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
+
+
+// Home page
+app.get("/hero", (req, res) => {
+    res.render("hero.ejs");
 });
 
-app.get("/Menu", async(req,res)=>{
-   const allMenus= await Menu.find();
-   res.render("menu.ejs",{ allMenus });
-    
-});
- 
 
-app.get("/category",(req,res)=>{
-    res.render("category");
+// Display all menu items
+app.get("/Menu", async (req, res) => {
+    try {
+        const allMenus = await Menu.find();
 
+        res.render("menu.ejs", { allMenus });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Unable to load menu");
+    }
 });
-app.get("/Menu/new",(req,res)=>{
-    res.render("new");
+
+
+// Category page
+app.get("/category", (req, res) => {
+    res.render("category.ejs");
 });
- 
- 
-app.post("/Menu",async(req,res)=>{
-   const newMenu=new Menu(req.body);
-   await newMenu.save();
-   res.redirect("/category");
- 
+
+
+// New menu form
+app.get("/Menu/new", (req, res) => {
+    res.render("new.ejs");
 });
- 
- 
-app.get("/Menu/:category",async(req,res)=>{
-    const category= req.params.category;
-    const allMenus= await Menu.find({ category:category });
-    res.render("menu",{ allMenus });
-    
+
+
+// Add new menu item
+app.post("/Menu", async (req, res) => {
+    try {
+        const newMenu = new Menu(req.body);
+
+        await newMenu.save();
+
+        res.redirect("/category");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Unable to add menu item");
+    }
 });
- 
+
+
+// Display menu according to category
+app.get("/Menu/:category", async (req, res) => {
+    try {
+        const { category } = req.params;
+
+        const allMenus = await Menu.find({ category });
+
+        res.render("menu.ejs", { allMenus });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Unable to load category");
+    }
+});
+
+
+// Add item to cart
 app.get("/add-to-card/:id", async (req, res) => {
-    let { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    const item = await Menu.findById(id);
+        const item = await Menu.findById(id);
 
-    card.push(item); // store item
+        if (!item) {
+            return res.status(404).send("Menu item not found");
+        }
 
-    res.redirect("/card");
+        /*
+        Prevent adding the same item multiple times.
+        Remove this check when duplicate items are allowed.
+        */
+        const alreadyAdded = card.some(
+            (cartItem) => cartItem._id.toString() === id
+        );
+
+        if (!alreadyAdded) {
+            card.push(item);
+        }
+
+        res.redirect("/card");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Unable to add item to cart");
+    }
 });
- 
+
+
+// Display cart
 app.get("/card", (req, res) => {
     res.render("card.ejs", { card });
 });
 
-app.listen(8080,(req,res)=>{
-    console.log("server is listing on 8080")
+
+// Delete item from the temporary cart array
+app.post("/cart/:id", (req, res) => {
+    const { id } = req.params;
+
+    card = card.filter((item) => {
+        return item._id.toString() !== id;
+    });
+
+    res.redirect("/card");
+});
+app.delete("/cart/:id", async (req, res) => {
+    await Cart.findByIdAndDelete(id);
+});
+
+
+// Checkout
+app.post("/checkout", (req, res) => {
+    const {
+        tableNumber,
+        paymentMethod,
+        totalAmount
+    } = req.body;
+
+    res.render("done.ejs", {
+        tableNumber,
+        paymentMethod,
+        totalAmount
+    });
+});
+
+
+app.listen(8080, () => {
+    console.log("Server is listening on port 8080");
 });
