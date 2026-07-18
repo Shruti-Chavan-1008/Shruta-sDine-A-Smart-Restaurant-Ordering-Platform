@@ -1,6 +1,16 @@
  <% layout('layouts/boilerplate')-%>
   <body> 
-     <h1 style="margin-left: 450px;">  <img style= "width: 200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgu5GeScWwcwtFlhaom9xVNd8Yu414tCfZFg&s"> <i>Menu Selection</i></h1>
+    <% if (typeof added !== "undefined" && added === true) { %>
+
+    <div
+        id="cartMessage"
+        class="alert alert-success text-center cart-message"
+    >
+        Item added to cart successfully.
+    </div>
+
+<% } %>
+     <h1 style="margin-left: 450px; margin-top: 100px;">  <img style= "width: 200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgu5GeScWwcwtFlhaom9xVNd8Yu414tCfZFg&s"> <i>Menu Selection</i></h1>
       <div class="container"> 
         
    <% for(let menu of allMenus) { %>
@@ -18,4 +28,13 @@
      </div>
      <% }%>
  </div>
+<script>
+    const cartMessage = document.getElementById("cartMessage");
+
+    if (cartMessage) {
+        setTimeout(() => {
+            cartMessage.style.display = "none";
+        }, 2000);
+    }
+</script>
  </body>
