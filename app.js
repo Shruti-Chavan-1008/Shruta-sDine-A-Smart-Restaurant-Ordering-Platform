@@ -1,101 +1,113 @@
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
-const Menu = require("./models/menu");
 const ejsMate = require("ejs-mate");
-const methodOverride = require("method-override");
 
+const Menu = require("./models/menu");
+
+const app = express();
+const PORT = 8080;
 const MONGO_URL = "mongodb://127.0.0.1:27017/hotel";
 
-// Temporary cart array
+// Temporary cart storage
 let card = [];
 
-main()
-    .then(() => {
-        console.log("Database is connected");
-    })
-    .catch((error) => {
-        console.log("Database connection error:", error);
-    });
-
-async function main() {
-    await mongoose.connect(MONGO_URL);
-}
-
-// App configuration
+// EJS configuration
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.engine("ejs", ejsMate);
-
-app.use(express.static(path.join(__dirname, "public")));
+// Middleware
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
-
-
-// Home page
-app.get("/hero", (req, res) => {
-    res.render("hero.ejs");
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+app.use((req, res, next) => {
+    res.locals.cartCount = card.length;
+    next();
 });
 
+// MongoDB connection
+async function connectDatabase() {
+    try {
+        await mongoose.connect(MONGO_URL);
+        console.log("Database connected successfully");
+    } catch (error) {
+        console.error("Database connection failed:", error);
+    }
+}
 
-// Display all menu items
+connectDatabase();
+
+/* -------------------- BASIC ROUTES -------------------- */
+
+app.get("/", (req, res) => {
+    res.redirect("/hero");
+});
+
+app.get("/hero", (req, res) => {
+    res.render("hero");
+});
+
+app.get("/category", (req, res) => {
+    res.render("category");
+});
+
+/* -------------------- MENU ROUTES -------------------- */
+
+// Show all menu items
 app.get("/Menu", async (req, res) => {
     try {
         const allMenus = await Menu.find();
 
-        res.render("menu.ejs", { allMenus });
+        res.render("menu.ejs", {
+            allMenus,
+            added: req.query.added === "true"
+        });
     } catch (error) {
         console.log(error);
         res.status(500).send("Unable to load menu");
     }
 });
-
-
-// Category page
-app.get("/category", (req, res) => {
-    res.render("category.ejs");
-});
-
-
-// New menu form
+// Show form for creating menu item
 app.get("/Menu/new", (req, res) => {
-    res.render("new.ejs");
+    res.render("new");
 });
 
-
-// Add new menu item
+// Create a menu item
 app.post("/Menu", async (req, res) => {
     try {
         const newMenu = new Menu(req.body);
 
         await newMenu.save();
 
-        res.redirect("/category");
+        res.redirect("/Menu");
     } catch (error) {
-        console.log(error);
-        res.status(500).send("Unable to add menu item");
+        console.error(error);
+        res.status(500).send("Unable to create menu item");
     }
 });
 
-
-// Display menu according to category
+// Show menu items according to category
 app.get("/Menu/:category", async (req, res) => {
     try {
         const { category } = req.params;
 
-        const allMenus = await Menu.find({ category });
+        const allMenus = await Menu.find({
+            category: category
+        });
 
-        res.render("menu.ejs", { allMenus });
+        res.render("menu.ejs", {
+            allMenus,
+            added: req.query.added === "true"
+        });
     } catch (error) {
         console.log(error);
         res.status(500).send("Unable to load category");
     }
 });
+/* -------------------- CART ROUTES -------------------- */
 
-
-// Add item to cart
+// Add menu item to cart
 app.get("/add-to-card/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -106,63 +118,99 @@ app.get("/add-to-card/:id", async (req, res) => {
             return res.status(404).send("Menu item not found");
         }
 
-        /*
-        Prevent adding the same item multiple times.
-        Remove this check when duplicate items are allowed.
-        */
-        const alreadyAdded = card.some(
-            (cartItem) => cartItem._id.toString() === id
-        );
+        card.push(item);
 
-        if (!alreadyAdded) {
-            card.push(item);
-        }
+        const previousPage = req.get("referer") || "/Menu";
 
-        res.redirect("/card");
+        const separator = previousPage.includes("?") ? "&" : "?";
+
+        res.redirect(`${previousPage}${separator}added=true`);
     } catch (error) {
         console.log(error);
         res.status(500).send("Unable to add item to cart");
     }
 });
 
-
-// Display cart
+// Display cart page
 app.get("/card", (req, res) => {
-    res.render("card.ejs", { card });
-});
-
-
-// Delete item from the temporary cart array
-app.post("/cart/:id", (req, res) => {
-    const { id } = req.params;
-
-    card = card.filter((item) => {
-        return item._id.toString() !== id;
+    res.render("card", {
+        card
     });
-
-    res.redirect("/card");
-});
-app.delete("/cart/:id", async (req, res) => {
-    await Cart.findByIdAndDelete(id);
 });
 
+// Delete item from cart
+app.post("/cart/delete/:id", (req, res) => {
+    try {
+        const { id } = req.params;
 
-// Checkout
+        card = card.filter((item) => {
+            return item._id.toString() !== id;
+        });
+
+        res.redirect("/card");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Unable to remove item");
+    }
+});
+
+/* -------------------- CHECKOUT ROUTE -------------------- */
+
 app.post("/checkout", (req, res) => {
-    const {
-        tableNumber,
-        paymentMethod,
-        totalAmount
-    } = req.body;
+    try {
+        const {
+            tableNumber,
+            paymentMethod
+        } = req.body;
 
-    res.render("done.ejs", {
-        tableNumber,
-        paymentMethod,
-        totalAmount
-    });
+        if (!tableNumber || !paymentMethod) {
+            return res.status(400).send(
+                "Table number and payment method are required"
+            );
+        }
+
+        if (card.length === 0) {
+            return res.redirect("/card");
+        }
+
+        const orderedItems = card.map((item) => {
+            return {
+                title: item.title,
+                image: item.image,
+                price: Number(item.price)
+            };
+        });
+
+        const subtotal = orderedItems.reduce((sum, item) => {
+            return sum + item.price;
+        }, 0);
+
+        const gst = subtotal * 0.05;
+        const totalAmount = subtotal + gst;
+
+        // Clear cart after copying order information
+        card = [];
+
+        res.render("done", {
+            tableNumber,
+            paymentMethod,
+            orderedItems,
+            subtotal,
+            gst,
+            totalAmount
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Unable to complete checkout");
+    }
 });
+ 
 
+app.use((req, res) => {
+    res.status(404).send("Page not found");
+});
+ 
 
-app.listen(8080, () => {
-    console.log("Server is listening on port 8080");
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
