@@ -1,171 +1,408 @@
 <% layout("layouts/boilerplate") %>
 
-<div class="cart-page">
+<style>
+    .cart-page {
+        min-height: 100vh;
+        padding: 45px 20px;
+        background: #f5f5f8;
+    }
 
+    .cart-container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .cart-heading {
+        margin-bottom: 25px;
+    }
+
+    .cart-heading p {
+        margin: 0;
+        color: #9c3cff;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+    }
+
+    .cart-heading h1 {
+        margin: 7px 0 0;
+        font-size: 36px;
+        font-weight: 800;
+    }
+
+    .products-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .product-card {
+        display: grid;
+        grid-template-columns: 150px 1fr auto;
+        align-items: center;
+        gap: 22px;
+        padding: 18px;
+        background: white;
+        border: 1px solid #eeeeee;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .product-image {
+        width: 150px;
+        height: 125px;
+        border-radius: 14px;
+        object-fit: cover;
+    }
+
+    .product-information h2 {
+        margin: 0 0 12px;
+        font-size: 25px;
+    }
+
+    .product-price {
+        margin: 0;
+        color: #168b46;
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+    .delete-button {
+        padding: 11px 17px;
+        border: none;
+        border-radius: 10px;
+        background: #fff0f1;
+        color: #dc3545;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .delete-button:hover {
+        background: #dc3545;
+        color: white;
+    }
+
+    .proceed-button {
+        width: 100%;
+        margin-top: 28px;
+        padding: 17px;
+        border: none;
+        border-radius: 13px;
+        background: #9c3cff;
+        color: white;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .proceed-button:hover {
+        background: #7c26dc;
+    }
+
+    .order-information {
+        display: none;
+        margin-top: 28px;
+        padding: 30px;
+        background: white;
+        border-radius: 19px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-information h2 {
+        margin-top: 0;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 9px;
+        font-weight: 750;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 14px 15px;
+        border: 1px solid #d8d8d8;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    .bill-card {
+        padding: 22px;
+        background: #f8f7fc;
+        border-radius: 14px;
+    }
+
+    .bill-card h3 {
+        margin-top: 0;
+    }
+
+    .bill-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .bill-divider {
+        height: 1px;
+        margin: 17px 0;
+        background: #dddddd;
+    }
+
+    .total-row {
+        margin-bottom: 0;
+        font-size: 21px;
+        font-weight: 800;
+    }
+
+    .total-price {
+        color: #168b46;
+    }
+
+    .payment-section {
+        margin-top: 27px;
+    }
+
+    .payment-option {
+        display: block;
+        margin-bottom: 12px;
+        cursor: pointer;
+    }
+
+    .payment-option input {
+        display: none;
+    }
+
+    .payment-content {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px;
+        border: 2px solid #e7e7e7;
+        border-radius: 12px;
+    }
+
+    .payment-option input:checked + .payment-content {
+        border-color: #9c3cff;
+        background: #f8f1ff;
+    }
+
+    .payment-content i {
+        color: #9c3cff;
+        font-size: 21px;
+    }
+
+    .payment-content p {
+        margin: 4px 0 0;
+        color: #777777;
+        font-size: 13px;
+    }
+
+    .place-order-button {
+        width: 100%;
+        margin-top: 25px;
+        padding: 17px;
+        border: none;
+        border-radius: 12px;
+        background: #168b46;
+        color: white;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .place-order-button:hover {
+        background: #117239;
+    }
+
+    .empty-cart {
+        padding: 65px 20px;
+        background: white;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .empty-cart i {
+        color: #9c3cff;
+        font-size: 60px;
+    }
+
+    .empty-cart h2 {
+        margin-top: 20px;
+    }
+
+    .empty-cart p {
+        color: #777777;
+    }
+
+    .menu-link {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 13px 25px;
+        border-radius: 10px;
+        background: #9c3cff;
+        color: white;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    @media (max-width: 650px) {
+        .product-card {
+            grid-template-columns: 100px 1fr;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+        }
+
+        .delete-form {
+            grid-column: 1 / -1;
+        }
+
+        .delete-button {
+            width: 100%;
+        }
+
+        .order-information {
+            padding: 22px;
+        }
+    }
+</style>
+
+<div class="cart-page">
     <div class="cart-container">
 
-        <h1 class="cart-heading">Your Order</h1>
+        <div class="cart-heading">
+            <p>YOUR ORDER</p>
+            <h1>Shopping Cart</h1>
+        </div>
 
-        <% let total = 0; %>
+        <% let subtotal = 0; %>
 
         <% if (card && card.length > 0) { %>
 
-            <div class="products-section">
+            <div class="products-list">
 
-                <% for (let item of card) { %>
+                <% card.forEach((item) => { %>
 
-                    <% total += Number(item.price); %>
+                    <% subtotal += Number(item.price); %>
 
                     <div class="product-card">
 
-                        <div class="product-image-section">
-
-                            <img
-                                src="<%= item.image %>"
-                                alt="<%= item.title %>"
-                                class="product-image"
-                            >
-
-                        </div>
+                        <img
+                            src="<%= item.image %>"
+                            alt="<%= item.title %>"
+                            class="product-image"
+                        >
 
                         <div class="product-information">
-
-                            <h2 class="product-title">
-                                <%= item.title %>
-                            </h2>
+                            <h2><%= item.title %></h2>
 
                             <p class="product-price">
-                                ₹<%= item.price %>
+                                ₹<%= Number(item.price).toFixed(2) %>
                             </p>
-
                         </div>
 
-                        <div class="delete-section">
-
-                            <form
-                                action="/cart/<%= item._id %>?_method=DELETE"
-                                method="POST"
+                        <form
+                            action="/cart/delete/<%= item._id %>"
+                            method="POST"
+                            class="delete-form"
+                        >
+                            <button
+                                type="submit"
+                                class="delete-button"
+                                onclick="return confirm('Remove this item from cart?')"
                             >
-
-                                <button
-                                    type="submit"
-                                    class="delete-button"
-                                    onclick="return confirm('Are you sure you want to delete this item?')"
-                                >
-                                    <i class="fa-solid fa-trash"></i>
-                                    Delete
-                                </button>
-
-                            </form>
-
-                        </div>
+                                <i class="fa-solid fa-trash"></i>
+                                Remove
+                            </button>
+                        </form>
 
                     </div>
 
-                <% } %>
+                <% }); %>
 
             </div>
 
             <button
                 type="button"
                 class="proceed-button"
-                onclick="showOrderInformation()"
+                onclick="openCheckout()"
             >
                 Proceed to Checkout
             </button>
 
-            <div class="order-card" id="orderInformation">
+            <% const gst = subtotal * 0.05; %>
+            <% const totalAmount = subtotal + gst; %>
 
-                <div class="order-header">
-
-                    <div>
-                        <p class="small-heading">ORDER DETAILS</p>
-                        <h2>Order Information</h2>
-                    </div>
-
-                    <i class="fa-solid fa-receipt receipt-icon"></i>
-
-                </div>
+            <div
+                class="order-information"
+                id="orderInformation"
+            >
+                <h2>Order Information</h2>
 
                 <form action="/checkout" method="POST">
 
-                    <div class="table-input-container">
-
+                    <div class="form-group">
                         <label for="tableNumber">
-                            Table Number
+                            Enter Table Number
                         </label>
 
                         <input
                             type="number"
                             id="tableNumber"
                             name="tableNumber"
-                            placeholder="Enter your table number"
                             min="1"
+                            placeholder="For example: 5"
                             required
                         >
-
                     </div>
 
-                    <div class="bill-information">
+                    <div class="bill-card">
+                        <h3>Bill Details</h3>
 
                         <div class="bill-row">
-
                             <span>Total Items</span>
-
-                            <span>
-                                <%= card.length %>
-                            </span>
-
+                            <strong><%= card.length %></strong>
                         </div>
 
                         <div class="bill-row">
-
                             <span>Subtotal</span>
 
-                            <span>
-                                ₹<%= total.toFixed(2) %>
-                            </span>
-
+                            <strong>
+                                ₹<%= subtotal.toFixed(2) %>
+                            </strong>
                         </div>
 
-                        <% let gst = total * 0.05; %>
-
                         <div class="bill-row">
-
                             <span>GST (5%)</span>
 
-                            <span>
+                            <strong>
                                 ₹<%= gst.toFixed(2) %>
-                            </span>
-
+                            </strong>
                         </div>
 
                         <div class="bill-divider"></div>
 
-                        <div class="bill-row final-total">
-
+                        <div class="bill-row total-row">
                             <span>Total Amount</span>
 
-                            <span>
-                                ₹<%= (total + gst).toFixed(2) %>
-                            </span>
-
+                            <strong class="total-price">
+                                ₹<%= totalAmount.toFixed(2) %>
+                            </strong>
                         </div>
-
                     </div>
 
-                    <input
-                        type="hidden"
-                        name="totalAmount"
-                        value="<%= (total + gst).toFixed(2) %>"
-                    >
-
                     <div class="payment-section">
-
                         <h3>Select Payment Method</h3>
 
                         <label class="payment-option">
-
                             <input
                                 type="radio"
                                 name="paymentMethod"
@@ -174,17 +411,16 @@
                             >
 
                             <div class="payment-content">
-
                                 <i class="fa-solid fa-money-bill-wave"></i>
 
-                                <span>Cash</span>
-
+                                <div>
+                                    <strong>Cash</strong>
+                                    <p>Pay at your table</p>
+                                </div>
                             </div>
-
                         </label>
 
                         <label class="payment-option">
-
                             <input
                                 type="radio"
                                 name="paymentMethod"
@@ -192,17 +428,16 @@
                             >
 
                             <div class="payment-content">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
 
-                                <i class="fa-solid fa-mobile-screen"></i>
-
-                                <span>UPI Payment</span>
-
+                                <div>
+                                    <strong>UPI</strong>
+                                    <p>Google Pay, PhonePe or Paytm</p>
+                                </div>
                             </div>
-
                         </label>
 
                         <label class="payment-option">
-
                             <input
                                 type="radio"
                                 name="paymentMethod"
@@ -210,66 +445,57 @@
                             >
 
                             <div class="payment-content">
-
                                 <i class="fa-solid fa-credit-card"></i>
 
-                                <span>Credit / Debit Card</span>
-
+                                <div>
+                                    <strong>Card</strong>
+                                    <p>Credit card or debit card</p>
+                                </div>
                             </div>
-
                         </label>
-
                     </div>
 
-                   <button
-        type="submit"
-        class="delete-button"
-        onclick="return confirm('Are you sure you want to delete this item?')"
-    >
-        <i class="fa-solid fa-trash"></i>
-        Delete
-    </button>
+                    <button
+                        type="submit"
+                        class="place-order-button"
+                    >
+                        Pay and Place Order
+                    </button>
 
                 </form>
-
             </div>
 
         <% } else { %>
 
             <div class="empty-cart">
-
                 <i class="fa-solid fa-cart-shopping"></i>
 
                 <h2>Your cart is empty</h2>
 
                 <p>
-                    Add some delicious items to continue.
+                    Add food items from the menu to continue.
                 </p>
 
-                <a href="/" class="shopping-button">
-                    Continue Shopping
+                <a href="/Menu" class="menu-link">
+                    View Menu
                 </a>
-
             </div>
 
         <% } %>
 
     </div>
-
 </div>
 
 <script>
+    function openCheckout() {
+        const orderInformation =
+            document.getElementById("orderInformation");
 
-    function showOrderInformation() {
+        orderInformation.style.display = "block";
 
-        const orderCard = document.getElementById("orderInformation");
-
-        orderCard.style.display = "block";
-
-        orderCard.scrollIntoView({
-            behavior: "smooth"
+        orderInformation.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
         });
-
     }
-
 </script>
