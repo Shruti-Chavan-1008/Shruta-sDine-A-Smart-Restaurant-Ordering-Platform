@@ -21,7 +21,80 @@
     padding: 2;
     align-items: center;
 }
+.custom-navbar {
+    padding: 10px 25px;
+    background-color: #eaf6ff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
 
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.navbar-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+}
+
+.brand-text {
+    color: #252525;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.navbar-nav {
+    gap: 15px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #252525;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #6f42c1;
+}
+
+.admin-login-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border-radius: 9px;
+    background-color: #ffffff;
+    border: 1px solid #6f42c1;
+    color: #6f42c1;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.admin-login-button:hover {
+    background-color: #6f42c1;
+    color: #ffffff;
+}
+
+@media (max-width: 991px) {
+    .navbar-nav {
+        margin-top: 15px;
+        align-items: flex-start !important;
+    }
+
+    .admin-login-button {
+        margin-top: 5px;
+    }
+}
 .cat{
     background-color: gray;
     height: 10px;
